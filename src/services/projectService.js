@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8055";
+const API_URL = "/api";
 
 export async function getProjects() {
   const token = localStorage.getItem("access_token");
@@ -28,8 +28,14 @@ export async function addProject(project) {
 
   const data = await response.json();
 
-  return data;
+  console.log("Add project response:", data);
+
+  return {
+    ok: response.ok,
+    data: data,
+  };
 }
+
 export async function getProjectById(id) {
   const token = localStorage.getItem("access_token");
 
@@ -43,6 +49,7 @@ export async function getProjectById(id) {
 
   return data;
 }
+
 export async function updateProject(id, project) {
   const token = localStorage.getItem("access_token");
 
@@ -57,7 +64,10 @@ export async function updateProject(id, project) {
 
   const data = await response.json();
 
-  return data;
+  return {
+    ok: response.ok,
+    data: data,
+  };
 }
 
 export async function deleteProject(id) {

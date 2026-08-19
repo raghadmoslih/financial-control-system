@@ -1,0 +1,613 @@
+
+
+.dashboard-page {
+  min-height: 100vh;
+
+  background: #f4f7fb;
+
+  color: #1e293b;
+
+  padding-bottom: 50px;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.dashboard-header {
+  padding: 35px 50px;
+
+  background: linear-gradient(
+    135deg,
+    #0f172a 0%,
+    #1e3a8a 55%,
+    #2563eb 100%
+  );
+
+  color: #ffffff;
+
+  border-radius: 0 0 28px 28px;
+
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.18);
+}
+
+
+/* HEADER CONTENT */
+
+.dashboard-header-content {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 30px;
+}
+
+
+.dashboard-brand {
+  width: 45px;
+
+  height: 45px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  margin: 0 0 18px;
+
+  border-radius: 11px;
+
+  background: rgba(255, 255, 255, 0.15);
+
+  color: #ffffff;
+
+  font-size: 16px;
+
+  font-weight: 700;
+}
+
+
+.dashboard-header h1 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 30px;
+
+  font-weight: 700;
+}
+
+
+.dashboard-welcome {
+  margin: 7px 0 0;
+
+  color: #dbeafe;
+
+  font-size: 14px;
+}
+
+
+/* =========================
+   LOGOUT BUTTON
+========================= */
+
+.logout-button {
+  padding: 10px 20px;
+
+  border: 1px solid rgba(255, 255, 255, 0.25);
+
+  border-radius: 8px;
+
+  background: rgba(255, 255, 255, 0.12);
+
+  color: #ffffff;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+
+.logout-button:hover {
+  background: rgba(255, 255, 255, 0.22);
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================
+   SECTIONS
+========================= */
+
+.dashboard-section {
+  max-width: 1400px;
+
+  margin: 35px auto 0;
+
+  padding: 0 40px;
+}
+
+
+.section-header {
+  margin-bottom: 18px;
+}
+
+
+.section-header-row {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+
+.section-header h2 {
+  margin: 0;
+
+  color: #0f172a;
+
+  font-size: 21px;
+
+  font-weight: 700;
+}
+
+
+.section-header p {
+  margin: 6px 0 0;
+
+  color: #64748b;
+
+  font-size: 14px;
+}
+
+
+/* =========================
+   MANAGEMENT
+========================= */
+
+.management-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 18px;
+}
+
+
+.management-card {
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+
+  padding: 21px;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 14px;
+
+  text-decoration: none;
+
+  box-shadow:
+    0 4px 12px rgba(15, 23, 42, 0.04);
+
+  transition: 0.2s;
+}
+
+
+.management-card:hover {
+  transform: translateY(-3px);
+
+  border-color: #2563eb;
+
+  box-shadow:
+    0 10px 25px rgba(37, 99, 235, 0.13);
+}
+
+
+.management-icon {
+  width: 46px;
+
+  height: 46px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 11px;
+
+  background: #2563eb;
+
+  color: #ffffff;
+
+  font-size: 15px;
+
+  font-weight: 700;
+}
+
+
+.management-card h3 {
+  margin: 0;
+
+  color: #0f172a;
+
+  font-size: 15px;
+}
+
+
+.management-card p {
+  margin: 5px 0 0;
+
+  color: #64748b;
+
+  font-size: 12px;
+}
+
+
+/* =========================
+   FINANCIAL SUMMARY
+========================= */
+
+.summary-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 18px;
+}
+
+
+.summary-card {
+  position: relative;
+
+  padding: 22px;
+
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 14px;
+
+  box-shadow:
+    0 4px 12px rgba(15, 23, 42, 0.04);
+
+  transition: 0.2s;
+}
+
+
+.summary-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+
+.summary-card::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+
+  top: 0;
+
+  width: 4px;
+
+  height: 100%;
+
+  background: #2563eb;
+}
+
+
+.summary-label {
+  display: block;
+
+  margin-bottom: 10px;
+
+  color: #64748b;
+
+  font-size: 13px;
+
+  font-weight: 600;
+}
+
+
+.summary-value {
+  color: #0f172a;
+
+  font-size: 23px;
+
+  font-weight: 700;
+}
+
+
+/* =========================
+   PROFIT
+========================= */
+
+.profit-card {
+  background: #f8fafc;
+
+  border: 1px solid #e2e8f0;
+}
+
+
+.profit-card::before {
+  background: #16a34a;
+}
+
+
+.profit-card .summary-label {
+  color: #475569;
+}
+
+
+.profit-card .summary-value {
+  color: #16a34a;
+
+  font-size: 23px;
+
+  font-weight: 700;
+}
+
+
+/* =========================
+   VIEW ALL
+========================= */
+
+.view-all {
+  padding: 8px 14px;
+
+  border-radius: 8px;
+
+  background: #eff6ff;
+
+  color: #2563eb;
+
+  text-decoration: none;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  transition: 0.2s;
+}
+
+
+.view-all:hover {
+  background: #dbeafe;
+
+  color: #1d4ed8;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-container {
+  overflow-x: auto;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 14px;
+
+  box-shadow:
+    0 4px 12px rgba(15, 23, 42, 0.04);
+}
+
+
+.dashboard-table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  min-width: 650px;
+}
+
+
+.dashboard-table th {
+  padding: 14px 18px;
+
+  background: #f8fafc;
+
+  color: #475569;
+
+  text-align: left;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  border-bottom: 1px solid #e2e8f0;
+}
+
+
+.dashboard-table td {
+  padding: 15px 18px;
+
+  color: #334155;
+
+  font-size: 13px;
+
+  border-bottom: 1px solid #f1f5f9;
+}
+
+
+.dashboard-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+
+.dashboard-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+.status-badge {
+  display: inline-block;
+
+  padding: 5px 10px;
+
+  border-radius: 20px;
+
+  background: #eff6ff;
+
+  color: #2563eb;
+
+  font-size: 11px;
+
+  font-weight: 600;
+}
+
+
+/* COMPLETED */
+
+.status-badge.completed {
+  background: #ecfdf5;
+
+  color: #16a34a;
+}
+
+
+/* ACTIVE */
+
+.status-badge.active {
+  background: #eff6ff;
+
+  color: #2563eb;
+}
+
+
+/* =========================
+   AMOUNT
+========================= */
+
+.amount-cell {
+  color: #0f172a !important;
+
+  font-weight: 600;
+}
+
+
+/* =========================
+   EMPTY STATE
+========================= */
+
+.empty-state {
+  padding: 35px;
+
+  text-align: center;
+
+  color: #64748b;
+
+  font-size: 14px;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1100px) {
+
+  .management-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+
+  .summary-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+}
+
+
+@media (max-width: 650px) {
+
+  .dashboard-header {
+    padding: 30px 22px;
+
+    border-radius: 0 0 20px 20px;
+  }
+
+
+  .dashboard-header-content {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+
+  .dashboard-header h1 {
+    font-size: 25px;
+  }
+
+
+  .dashboard-section {
+    padding: 0 20px;
+
+    margin-top: 28px;
+  }
+
+
+  .management-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  .section-header-row {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+
+  .view-all {
+    align-self: flex-start;
+  }
+
+
+  .logout-button {
+    width: 100%;
+  }
+
+}
+

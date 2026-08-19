@@ -1,13 +1,22 @@
+
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import { getProjects } from "../services/projectService";
-import { addExpense } from "../services/expenseService";
+
+import {
+  getExpense,
+  updateExpense,
+} from "../services/expenseService";
+
 import { getEmployeeByEmail } from "../services/timesheetService";
 
 import "../styles/expenses.css";
 
-function AddExpense() {
+function EditExpense() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
   const [projects, setProjects] = useState([]);
   const [employees, setEmployees] = useState([]);
 
@@ -20,8 +29,6 @@ function AddExpense() {
   const [role, setRole] = useState("");
   const [selectedProject, setSelectedProject] = useState(null);
 
-  const navigate = useNavigate();
-
   // =========================
   // TODAY
   // =========================
@@ -29,29 +36,13 @@ function AddExpense() {
   const today =
     new Date().toISOString().split("T")[0];
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  // =========================
-  // BACK TO DASHBOARD
-  // =========================
-
-  function goBackToDashboard() {
-    if (role === "Administrator") {
-      navigate("/admin");
-    } else if (role === "Manager") {
-      navigate("/dashboard");
-    } else if (role === "Employee") {
-      navigate("/employee");
-    } else {
-      navigate("/");
-    }
-  }
-
   // =========================
   // LOAD DATA
   // =========================
+
+  useEffect(() => {
+    loadData();
+  }, [id]);
 
   async function loadData() {
     try {
@@ -78,63 +69,146 @@ function AddExpense() {
           projectResult.errors
         );
       } else {
-        setProjects(
-          projectResult.data || []
-        );
-      }
+        const projectData =
+          projectResult.data || [];
 
-      // =========================
-      // GET EMPLOYEES
-      // MANAGER + ADMINISTRATOR
-      // =========================
+        setProjects(projectData);
 
-      if (
-        currentRole === "Manager" ||
-        currentRole === "Administrator"
-      ) {
-        const token =
-          localStorage.getItem(
-            "access_token"
-          );
+        // =========================
+        // GET EXPENSE
+        // =========================
 
-        const response = await fetch(
-          "/api/items/employees?fields=id,name,email,job_title",
-          {
-            headers: {
-              Authorization:
-                `Bearer ${token}`,
-            },
-          }
-        );
-
-        const employeeResult =
-          await response.json();
+        const result =
+          await getExpense(id);
 
         console.log(
-          "EMPLOYEES:",
-          employeeResult
+          "EXPENSE:",
+          result
         );
 
-        if (employeeResult.errors) {
-          console.error(
-            "EMPLOYEE ERROR:",
-            employeeResult.errors
+        if (
+          result.errors ||
+          !result.data
+        ) {
+          alert(
+            result.errors?.[0]?.message ||
+              "Expense not found."
           );
-        } else {
-          setEmployees(
-            employeeResult.data || []
+
+          navigate("/expenses");
+          return;
+        }
+
+        const expense =
+          result.data;
+
+        // =========================
+        // CURRENT VALUES
+        // =========================
+
+        const projectId =
+          expense.project?.id;
+
+        setProject(
+          String(projectId || "")
+        );
+
+        setAmount(
+          expense.amount ?? ""
+        );
+
+        setDescription(
+          expense.description || ""
+        );
+
+        setExpenseDate(
+          expense.expense_date
+            ? expense.expense_date.split("T")[0]
+            : ""
+        );
+
+        // =========================
+        // SELECT CURRENT PROJECT
+        // =========================
+
+        const currentProject =
+          projectData.find(
+            (item) =>
+              String(item.id) ===
+              String(projectId)
+          );
+
+        setSelectedProject(
+          currentProject || null
+        );
+
+        // =========================
+        // GET EMPLOYEES
+        // MANAGER + ADMINISTRATOR
+        // =========================
+
+        if (
+          currentRole === "Manager" ||
+          currentRole === "Administrator"
+        ) {
+          const token =
+            localStorage.getItem(
+              "access_token"
+            );
+
+          const response =
+            await fetch(
+              "/api/items/employees?fields=id,name,email,job_title",
+              {
+                headers: {
+                  Authorization:
+                    `Bearer ${token}`,
+                },
+              }
+            );
+
+          const employeeResult =
+            await response.json();
+
+          console.log(
+            "EMPLOYEES:",
+            employeeResult
+          );
+
+          if (
+            employeeResult.errors
+          ) {
+            console.error(
+              "EMPLOYEE ERROR:",
+              employeeResult.errors
+            );
+          } else {
+            setEmployees(
+              employeeResult.data || []
+            );
+          }
+
+          // =========================
+          // CURRENT EMPLOYEE
+          // =========================
+
+          setEmployee(
+            String(
+              expense.employee?.id || ""
+            )
           );
         }
+
       }
 
     } catch (error) {
       console.error(
-        "LOAD EXPENSE DATA ERROR:",
+        "LOAD EXPENSE ERROR:",
         error
       );
 
       alert(
-        "Failed to load expense data."
+        "Failed to load expense."
       );
     }
   }
@@ -148,6 +222,9 @@ function AddExpense() {
       e.target.value;
 
     setProject(projectId);
+
+    // Clear old date because the
+    // project period may have changed.
     setExpenseDate("");
 
     const foundProject =
@@ -197,14 +274,18 @@ function AddExpense() {
   // =========================
 
   /*
-    Expense Date cannot be:
+    Expense date cannot be:
 
     1. Before project start.
     2. After project end.
     3. In the future.
 
-    Therefore the maximum allowed date
-    is the earlier of project end and today.
+    Therefore the maximum allowed
+    date is the earlier of:
+
+    Project End
+    OR
+    Today
   */
 
   const maxExpenseDate =
@@ -212,6 +293,22 @@ function AddExpense() {
     projectEnd < today
       ? projectEnd
       : today;
+
+  // =========================
+  // BACK TO DASHBOARD
+  // =========================
+
+  function goBackToDashboard() {
+    if (role === "Administrator") {
+      navigate("/admin");
+    } else if (role === "Manager") {
+      navigate("/dashboard");
+    } else if (role === "Employee") {
+      navigate("/employee");
+    } else {
+      navigate("/");
+    }
+  }
 
   // =========================
   // SUBMIT
@@ -233,7 +330,7 @@ function AddExpense() {
     }
 
     // =========================
-    // PROJECT DATE VALIDATION
+    // PROJECT DATES
     // =========================
 
     if (
@@ -246,6 +343,10 @@ function AddExpense() {
 
       return;
     }
+
+    // =========================
+    // PROJECT DATE ORDER
+    // =========================
 
     if (projectEnd < projectStart) {
       alert(
@@ -279,6 +380,7 @@ function AddExpense() {
       return;
     }
 
+    // Before project start
     if (expenseDate < projectStart) {
       alert(
         "Expense date cannot be before the project start date."
@@ -287,6 +389,7 @@ function AddExpense() {
       return;
     }
 
+    // After project end
     if (expenseDate > projectEnd) {
       alert(
         "Expense date cannot be after the project end date."
@@ -295,6 +398,7 @@ function AddExpense() {
       return;
     }
 
+    // Future date
     if (expenseDate > today) {
       alert(
         "You cannot add an expense for a future date."
@@ -328,6 +432,10 @@ function AddExpense() {
 
       return;
     }
+
+    // =========================
+    // EMPLOYEE
+    // =========================
 
     try {
       let employeeId;
@@ -393,11 +501,11 @@ function AddExpense() {
       }
 
       // =========================
-      // ADD EXPENSE
+      // UPDATE EXPENSE
       // =========================
 
       const result =
-        await addExpense({
+        await updateExpense(id, {
           employee: employeeId,
           project: Number(project),
           amount: expenseAmount,
@@ -407,14 +515,18 @@ function AddExpense() {
         });
 
       console.log(
-        "ADD EXPENSE RESULT:",
+        "UPDATE EXPENSE RESULT:",
         result
       );
+
+      // =========================
+      // API ERROR
+      // =========================
 
       if (result.errors) {
         alert(
           result.errors[0]?.message ||
-            "Failed to add expense."
+            "Failed to update expense."
         );
 
         return;
@@ -425,19 +537,19 @@ function AddExpense() {
       // =========================
 
       alert(
-        "Expense added successfully."
+        "Expense updated successfully."
       );
 
       navigate("/expenses");
 
     } catch (error) {
       console.error(
-        "ADD EXPENSE ERROR:",
+        "UPDATE EXPENSE ERROR:",
         error
       );
 
       alert(
-        "Failed to add expense."
+        "Failed to update expense."
       );
     }
   }
@@ -469,17 +581,17 @@ function AddExpense() {
         <div className="expense-header">
 
           <div className="expense-icon">
-            +
+            ✎
           </div>
 
           <div>
 
             <h1>
-              Add Expense
+              Edit Expense
             </h1>
 
             <p>
-              Add a new project expense.
+              Update the expense information.
             </p>
 
           </div>
@@ -589,8 +701,9 @@ function AddExpense() {
 
             </select>
 
-
-            {/* PROJECT PERIOD */}
+            {/* =========================
+                PROJECT PERIOD
+            ========================= */}
 
             {selectedProject && (
               <small
@@ -628,7 +741,7 @@ function AddExpense() {
               type="number"
               min="0.01"
               step="0.01"
-              placeholder="Enter amount"
+              placeholder="Enter expense amount"
               value={amount}
               onChange={(e) =>
                 setAmount(
@@ -699,7 +812,6 @@ function AddExpense() {
               required
             />
 
-
             {!selectedProject && (
               <small
                 style={{
@@ -711,7 +823,6 @@ function AddExpense() {
                 Select a project first.
               </small>
             )}
-
 
             {selectedProject &&
               projectStart > today && (
@@ -756,7 +867,7 @@ function AddExpense() {
                 projectStart > today
               }
             >
-              Save Expense
+              Save Changes
             </button>
 
           </div>
@@ -769,4 +880,4 @@ function AddExpense() {
   );
 }
 
-export default AddExpense;
+export default EditExpense;

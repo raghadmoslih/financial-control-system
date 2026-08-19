@@ -1,57 +1,46 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { getProjects } from "../services/projectService";
-import { addExpense } from "../services/expenseService";
-import { getEmployeeByEmail } from "../services/timesheetService";
 
-import "../styles/expenses.css";
+import {
+  getTimesheet,
+  updateTimesheet,
+  getEmployeeByEmail,
+} from "../services/timesheetService";
 
-function AddExpense() {
+import "../styles/timesheets.css";
+
+function EditTimesheet() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
   const [projects, setProjects] = useState([]);
   const [employees, setEmployees] = useState([]);
 
   const [employee, setEmployee] = useState("");
   const [project, setProject] = useState("");
-  const [amount, setAmount] = useState("");
-  const [description, setDescription] = useState("");
-  const [expenseDate, setExpenseDate] = useState("");
+  const [workDate, setWorkDate] = useState("");
+  const [hours, setHours] = useState("");
 
   const [role, setRole] = useState("");
   const [selectedProject, setSelectedProject] = useState(null);
-
-  const navigate = useNavigate();
 
   // =========================
   // TODAY
   // =========================
 
-  const today =
-    new Date().toISOString().split("T")[0];
-
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  // =========================
-  // BACK TO DASHBOARD
-  // =========================
-
-  function goBackToDashboard() {
-    if (role === "Administrator") {
-      navigate("/admin");
-    } else if (role === "Manager") {
-      navigate("/dashboard");
-    } else if (role === "Employee") {
-      navigate("/employee");
-    } else {
-      navigate("/");
-    }
-  }
+  const today = new Date()
+    .toISOString()
+    .split("T")[0];
 
   // =========================
   // LOAD DATA
   // =========================
+
+  useEffect(() => {
+    loadData();
+  }, [id]);
 
   async function loadData() {
     try {
@@ -78,64 +67,150 @@ function AddExpense() {
           projectResult.errors
         );
       } else {
-        setProjects(
-          projectResult.data || []
-        );
-      }
+        const projectData =
+          projectResult.data || [];
 
-      // =========================
-      // GET EMPLOYEES
-      // MANAGER + ADMINISTRATOR
-      // =========================
+        setProjects(projectData);
 
-      if (
-        currentRole === "Manager" ||
-        currentRole === "Administrator"
-      ) {
-        const token =
-          localStorage.getItem(
-            "access_token"
-          );
+        // =========================
+        // GET TIMESHEET
+        // =========================
 
-        const response = await fetch(
-          "/api/items/employees?fields=id,name,email,job_title",
-          {
-            headers: {
-              Authorization:
-                `Bearer ${token}`,
-            },
-          }
-        );
-
-        const employeeResult =
-          await response.json();
+        const timesheetResult =
+          await getTimesheet(id);
 
         console.log(
-          "EMPLOYEES:",
-          employeeResult
+          "TIMESHEET:",
+          timesheetResult
         );
 
-        if (employeeResult.errors) {
-          console.error(
-            "EMPLOYEE ERROR:",
-            employeeResult.errors
+        if (
+          timesheetResult.errors ||
+          !timesheetResult.data
+        ) {
+          alert("Timesheet not found.");
+          navigate("/timesheets");
+          return;
+        }
+
+        const timesheet =
+          timesheetResult.data;
+
+        // =========================
+        // EXISTING PROJECT
+        // =========================
+
+        const existingProjectId =
+          timesheet.project?.id;
+
+        setProject(
+          existingProjectId || ""
+        );
+
+        const foundProject =
+          projectData.find(
+            (item) =>
+              String(item.id) ===
+              String(existingProjectId)
           );
-        } else {
-          setEmployees(
-            employeeResult.data || []
+
+        setSelectedProject(
+          foundProject || null
+        );
+
+        // =========================
+        // EXISTING WORK DATE
+        // =========================
+
+        setWorkDate(
+          timesheet.work_date
+            ? timesheet.work_date.split("T")[0]
+            : ""
+        );
+
+        // =========================
+        // EXISTING HOURS
+        // =========================
+
+        setHours(
+          timesheet.hours ?? ""
+        );
+
+        // =========================
+        // GET EMPLOYEES
+        // MANAGER + ADMINISTRATOR
+        // =========================
+
+        if (
+          currentRole === "Manager" ||
+          currentRole === "Administrator"
+        ) {
+          const token =
+            localStorage.getItem(
+              "access_token"
+            );
+
+          const response =
+            await fetch(
+              "/api/items/employees?fields=id,name,email,job_title",
+              {
+                headers: {
+                  Authorization:
+                    `Bearer ${token}`,
+                },
+              }
+            );
+
+          const employeeResult =
+            await response.json();
+
+          console.log(
+            "EMPLOYEES:",
+            employeeResult
           );
+
+          if (employeeResult.errors) {
+            console.error(
+              "EMPLOYEE ERROR:",
+              employeeResult.errors
+            );
+          } else {
+            setEmployees(
+              employeeResult.data || []
+            );
+
+            setEmployee(
+              timesheet.employee?.id || ""
+            );
+          }
         }
       }
 
     } catch (error) {
       console.error(
-        "LOAD EXPENSE DATA ERROR:",
+        "LOAD TIMESHEET ERROR:",
         error
       );
 
       alert(
-        "Failed to load expense data."
+        "Failed to load timesheet."
       );
+    }
+  }
+
+  // =========================
+  // BACK TO DASHBOARD
+  // =========================
+
+  function goBackToDashboard() {
+    if (role === "Administrator") {
+      navigate("/admin");
+    } else if (role === "Manager") {
+      navigate("/dashboard");
+    } else if (role === "Employee") {
+      navigate("/employee");
+    } else {
+      navigate("/");
     }
   }
 
@@ -148,7 +223,9 @@ function AddExpense() {
       e.target.value;
 
     setProject(projectId);
-    setExpenseDate("");
+
+    // Reset work date when project changes
+    setWorkDate("");
 
     const foundProject =
       projects.find(
@@ -175,7 +252,7 @@ function AddExpense() {
   }
 
   // =========================
-  // PROJECT DATE LIMITS
+  // PROJECT DATES
   // =========================
 
   const projectStart =
@@ -193,21 +270,10 @@ function AddExpense() {
       : "";
 
   // =========================
-  // MAX EXPENSE DATE
+  // MAX WORK DATE
   // =========================
 
-  /*
-    Expense Date cannot be:
-
-    1. Before project start.
-    2. After project end.
-    3. In the future.
-
-    Therefore the maximum allowed date
-    is the earlier of project end and today.
-  */
-
-  const maxExpenseDate =
+  const maxWorkDate =
     projectEnd &&
     projectEnd < today
       ? projectEnd
@@ -247,7 +313,9 @@ function AddExpense() {
       return;
     }
 
-    if (projectEnd < projectStart) {
+    if (
+      projectEnd < projectStart
+    ) {
       alert(
         "Project end date cannot be before the start date."
       );
@@ -261,73 +329,95 @@ function AddExpense() {
 
     if (projectStart > today) {
       alert(
-        "You cannot add an expense to a project that has not started yet."
+        "You cannot add or update a timesheet for a project that has not started yet."
       );
 
       return;
     }
 
     // =========================
-    // EXPENSE DATE
+    // WORK DATE VALIDATION
     // =========================
 
-    if (!expenseDate) {
+    if (!workDate) {
       alert(
-        "Please select an expense date."
-      );
-
-      return;
-    }
-
-    if (expenseDate < projectStart) {
-      alert(
-        "Expense date cannot be before the project start date."
-      );
-
-      return;
-    }
-
-    if (expenseDate > projectEnd) {
-      alert(
-        "Expense date cannot be after the project end date."
-      );
-
-      return;
-    }
-
-    if (expenseDate > today) {
-      alert(
-        "You cannot add an expense for a future date."
-      );
-
-      return;
-    }
-
-    // =========================
-    // AMOUNT VALIDATION
-    // =========================
-
-    const expenseAmount =
-      Number(amount);
-
-    if (!amount) {
-      alert(
-        "Please enter the expense amount."
+        "Please select a work date."
       );
 
       return;
     }
 
     if (
-      !Number.isFinite(expenseAmount) ||
-      expenseAmount <= 0
+      workDate < projectStart
     ) {
       alert(
-        "Expense amount must be greater than 0."
+        "Work date cannot be before the project start date."
       );
 
       return;
     }
+
+    if (
+      workDate > projectEnd
+    ) {
+      alert(
+        "Work date cannot be after the project end date."
+      );
+
+      return;
+    }
+
+    if (
+      workDate > today
+    ) {
+      alert(
+        "You cannot add or update a timesheet for a future date."
+      );
+
+      return;
+    }
+
+    // =========================
+    // HOURS VALIDATION
+    // =========================
+
+    if (hours === "") {
+      alert(
+        "Please enter the number of hours worked."
+      );
+
+      return;
+    }
+
+    const numberOfHours =
+      Number(hours);
+
+    if (
+      !Number.isInteger(
+        numberOfHours
+      )
+    ) {
+      alert(
+        "Hours must be a whole number."
+      );
+
+      return;
+    }
+
+    if (
+      numberOfHours < 1 ||
+      numberOfHours > 8
+    ) {
+      alert(
+        "Working hours must be between 1 and 8 hours per day."
+      );
+
+      return;
+    }
+
+    // =========================
+    // EMPLOYEE
+    // =========================
 
     try {
       let employeeId;
@@ -393,28 +483,40 @@ function AddExpense() {
       }
 
       // =========================
-      // ADD EXPENSE
+      // UPDATE TIMESHEET
       // =========================
 
       const result =
-        await addExpense({
-          employee: employeeId,
-          project: Number(project),
-          amount: expenseAmount,
-          description:
-            description.trim(),
-          expense_date: expenseDate,
-        });
+        await updateTimesheet(
+          id,
+          {
+            project:
+              Number(project),
+
+            employee:
+              employeeId,
+
+            work_date:
+              workDate,
+
+            hours:
+              numberOfHours,
+          }
+        );
 
       console.log(
-        "ADD EXPENSE RESULT:",
+        "UPDATE TIMESHEET RESULT:",
         result
       );
+
+      // =========================
+      // API ERROR
+      // =========================
 
       if (result.errors) {
         alert(
           result.errors[0]?.message ||
-            "Failed to add expense."
+            "Failed to update timesheet."
         );
 
         return;
@@ -425,27 +527,29 @@ function AddExpense() {
       // =========================
 
       alert(
-        "Expense added successfully."
+        "Timesheet updated successfully."
       );
 
-      navigate("/expenses");
+      navigate(
+        "/timesheets"
+      );
 
     } catch (error) {
       console.error(
-        "ADD EXPENSE ERROR:",
+        "UPDATE TIMESHEET ERROR:",
         error
       );
 
       alert(
-        "Failed to add expense."
+        "Failed to update timesheet."
       );
     }
   }
 
   return (
-    <div className="expense-page">
+    <div className="timesheet-page">
 
-      <div className="expense-card">
+      <div className="timesheet-card">
 
         {/* =========================
             BACK TO DASHBOARD
@@ -461,38 +565,36 @@ function AddExpense() {
           ← Back to Dashboard
         </button>
 
-
         {/* =========================
             HEADER
         ========================= */}
 
-        <div className="expense-header">
+        <div className="timesheet-header">
 
-          <div className="expense-icon">
-            +
+          <div className="timesheet-icon">
+            ✎
           </div>
 
           <div>
 
             <h1>
-              Add Expense
+              Edit Timesheet
             </h1>
 
             <p>
-              Add a new project expense.
+              Update the timesheet information.
             </p>
 
           </div>
 
         </div>
 
-
         {/* =========================
             FORM
         ========================= */}
 
         <form
-          className="expense-form"
+          className="timesheet-form"
           onSubmit={
             handleSubmit
           }
@@ -545,7 +647,6 @@ function AddExpense() {
 
           )}
 
-
           {/* =========================
               PROJECT
           ========================= */}
@@ -589,10 +690,12 @@ function AddExpense() {
 
             </select>
 
-
-            {/* PROJECT PERIOD */}
+            {/* =========================
+                PROJECT PERIOD
+            ========================= */}
 
             {selectedProject && (
+
               <small
                 style={{
                   display: "block",
@@ -600,86 +703,40 @@ function AddExpense() {
                   opacity: 0.7,
                 }}
               >
+
                 Available period:{" "}
+
                 <strong>
                   {projectStart}
                 </strong>
+
                 {" – "}
+
                 <strong>
                   {projectEnd}
                 </strong>
+
               </small>
+
             )}
 
           </div>
 
-
           {/* =========================
-              AMOUNT
+              WORK DATE
           ========================= */}
 
           <div className="form-group">
 
             <label>
-              Amount (SAR)
-            </label>
-
-            <input
-              type="number"
-              min="0.01"
-              step="0.01"
-              placeholder="Enter amount"
-              value={amount}
-              onChange={(e) =>
-                setAmount(
-                  e.target.value
-                )
-              }
-              required
-            />
-
-          </div>
-
-
-          {/* =========================
-              DESCRIPTION
-          ========================= */}
-
-          <div className="form-group">
-
-            <label>
-              Description
-            </label>
-
-            <textarea
-              placeholder="Enter expense description"
-              value={description}
-              onChange={(e) =>
-                setDescription(
-                  e.target.value
-                )
-              }
-              rows="4"
-            />
-
-          </div>
-
-
-          {/* =========================
-              EXPENSE DATE
-          ========================= */}
-
-          <div className="form-group">
-
-            <label>
-              Expense Date
+              Work Date
             </label>
 
             <input
               type="date"
-              value={expenseDate}
+              value={workDate}
               onChange={(e) =>
-                setExpenseDate(
+                setWorkDate(
                   e.target.value
                 )
               }
@@ -689,18 +746,18 @@ function AddExpense() {
               }
               max={
                 selectedProject
-                  ? maxExpenseDate
+                  ? maxWorkDate
                   : today
               }
+              required
               disabled={
                 !selectedProject ||
                 projectStart > today
               }
-              required
             />
 
-
             {!selectedProject && (
+
               <small
                 style={{
                   display: "block",
@@ -710,25 +767,64 @@ function AddExpense() {
               >
                 Select a project first.
               </small>
-            )}
 
+            )}
 
             {selectedProject &&
               projectStart > today && (
-                <small
-                  style={{
-                    display: "block",
-                    marginTop: "8px",
-                    opacity: 0.7,
-                  }}
-                >
-                  This project has not
-                  started yet.
-                </small>
-              )}
+
+              <small
+                style={{
+                  display: "block",
+                  marginTop: "8px",
+                  opacity: 0.7,
+                }}
+              >
+                This project has not
+                started yet.
+              </small>
+
+            )}
 
           </div>
 
+          {/* =========================
+              HOURS
+          ========================= */}
+
+          <div className="form-group">
+
+            <label>
+              Hours Worked
+            </label>
+
+            <input
+              type="number"
+              min="1"
+              max="8"
+              step="1"
+              placeholder="Enter hours worked"
+              value={hours}
+              onChange={(e) =>
+                setHours(
+                  e.target.value
+                )
+              }
+              required
+            />
+
+            <small
+              style={{
+                display: "block",
+                marginTop: "8px",
+                opacity: 0.7,
+              }}
+            >
+              Enter the number of
+              hours worked (1–8).
+            </small>
+
+          </div>
 
           {/* =========================
               BUTTONS
@@ -741,7 +837,7 @@ function AddExpense() {
               className="cancel-button"
               onClick={() =>
                 navigate(
-                  "/expenses"
+                  "/timesheets"
                 )
               }
             >
@@ -756,7 +852,7 @@ function AddExpense() {
                 projectStart > today
               }
             >
-              Save Expense
+              Save Changes
             </button>
 
           </div>
@@ -769,4 +865,4 @@ function AddExpense() {
   );
 }
 
-export default AddExpense;
+export default EditTimesheet;

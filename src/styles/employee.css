@@ -1,0 +1,502 @@
+
+
+.employee-page {
+  min-height: 100vh;
+
+  background: #f4f7fb;
+
+  color: #1e293b;
+
+  padding-bottom: 50px;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.employee-page .dashboard-header {
+  padding: 35px 50px;
+
+  background: linear-gradient(
+    135deg,
+    #0f172a 0%,
+    #1e3a8a 55%,
+    #2563eb 100%
+  );
+
+  color: #ffffff;
+
+  border-radius: 0 0 28px 28px;
+
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.18);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 30px;
+}
+
+
+/* =========================
+   HEADER CONTENT
+========================= */
+
+.employee-page .dashboard-header > div:first-child {
+  flex: 1;
+
+  min-width: 0;
+}
+
+
+/* =========================
+   BRAND
+========================= */
+
+.employee-page .dashboard-brand {
+  width: 45px;
+
+  height: 45px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  margin: 0 0 18px;
+
+  border-radius: 11px;
+
+  background: rgba(255, 255, 255, 0.15);
+
+  color: #ffffff;
+
+  font-size: 16px;
+
+  font-weight: 700;
+}
+
+
+/* =========================
+   HEADER TEXT
+========================= */
+
+.employee-page .dashboard-header h1 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 30px;
+
+  font-weight: 700;
+}
+
+.employee-page .dashboard-welcome {
+  margin: 7px 0 0;
+
+  color: #dbeafe;
+
+  font-size: 14px;
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+.employee-page .logout-button {
+  flex-shrink: 0;
+
+  padding: 10px 20px;
+
+  border: 1px solid rgba(255, 255, 255, 0.25);
+
+  border-radius: 8px;
+
+  background: rgba(255, 255, 255, 0.12);
+
+  color: #ffffff;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.employee-page .logout-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================
+   SECTIONS
+========================= */
+
+.employee-section {
+  max-width: 1400px;
+
+  margin: 35px auto 0;
+
+  padding: 0 40px;
+}
+
+.employee-section .section-header {
+  margin-bottom: 18px;
+}
+
+.employee-section .section-header h2 {
+  margin: 0;
+
+  color: #0f172a;
+
+  font-size: 21px;
+
+  font-weight: 700;
+}
+
+.employee-section .section-header p {
+  margin: 6px 0 0;
+
+  color: #64748b;
+
+  font-size: 14px;
+}
+
+
+/* =========================
+   SUMMARY
+========================= */
+
+.employee-summary-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 18px;
+}
+
+.employee-summary-card {
+  position: relative;
+
+  padding: 22px;
+
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 14px;
+
+  box-shadow:
+    0 4px 12px rgba(15, 23, 42, 0.04);
+
+  transition: 0.2s;
+}
+
+.employee-summary-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+
+/* BLUE LINE */
+
+.employee-summary-card::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+
+  top: 0;
+
+  width: 4px;
+
+  height: 100%;
+
+  background: #2563eb;
+}
+
+.employee-summary-card .summary-label {
+  display: block;
+
+  margin-bottom: 10px;
+
+  color: #64748b;
+
+  font-size: 13px;
+
+  font-weight: 600;
+}
+
+.employee-summary-card .summary-value {
+  display: block;
+
+  color: #0f172a;
+
+  font-size: 23px;
+
+  font-weight: 700;
+}
+
+
+/* =========================
+   TABLE CONTAINER
+========================= */
+
+.employee-table-container {
+  overflow-x: auto;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 14px;
+
+  box-shadow:
+    0 4px 12px rgba(15, 23, 42, 0.04);
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.employee-table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  min-width: 600px;
+}
+
+.employee-table th {
+  padding: 14px 18px;
+
+  text-align: left;
+
+  background: #f8fafc;
+
+  color: #475569;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.employee-table td {
+  padding: 15px 18px;
+
+  color: #334155;
+
+  font-size: 13px;
+
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.employee-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.employee-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+.status-badge {
+  display: inline-block;
+
+  padding: 5px 10px;
+
+  border-radius: 20px;
+
+  font-size: 11px;
+
+  font-weight: 600;
+}
+
+.status-badge.active {
+  background: #eff6ff;
+
+  color: #2563eb;
+}
+
+.status-badge.completed {
+  background: #ecfdf5;
+
+  color: #16a34a;
+}
+
+
+/* =========================
+   ACTION BUTTONS
+========================= */
+
+.employee-action {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin-top: 15px;
+}
+
+.employee-action a {
+  text-decoration: none;
+}
+
+.primary-button,
+.secondary-button {
+  padding: 10px 18px;
+
+  border-radius: 8px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+
+/* PRIMARY */
+
+.primary-button {
+  border: none;
+
+  background: #2563eb;
+
+  color: #ffffff;
+}
+
+.primary-button:hover {
+  background: #1d4ed8;
+
+  transform: translateY(-1px);
+}
+
+
+/* SECONDARY */
+
+.secondary-button {
+  border: 1px solid #dbeafe;
+
+  background: #eff6ff;
+
+  color: #2563eb;
+}
+
+.secondary-button:hover {
+  background: #dbeafe;
+
+  color: #1d4ed8;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================
+   EMPTY MESSAGE
+========================= */
+
+.empty-message {
+  padding: 35px;
+
+  margin: 0;
+
+  color: #64748b;
+
+  text-align: center;
+
+  font-size: 14px;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1100px) {
+
+  .employee-summary-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 650px) {
+
+  .employee-page .dashboard-header {
+    padding: 30px 22px;
+
+    border-radius: 0 0 20px 20px;
+
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .employee-page .dashboard-header > div:first-child {
+    width: 100%;
+  }
+
+  .employee-page .dashboard-header h1 {
+    font-size: 25px;
+  }
+
+  .employee-page .logout-button {
+    align-self: flex-start;
+  }
+
+  .employee-section {
+    padding: 0 20px;
+
+    margin-top: 28px;
+  }
+
+  .employee-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .employee-action {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .employee-action button {
+    width: 100%;
+  }
+
+}
+
+

@@ -1,0 +1,590 @@
+
+/* =========================
+   PROJECT FINANCIAL PAGE
+========================= */
+
+.financial-page {
+  min-height: 100vh;
+
+  padding: 35px 45px;
+
+  background: #f4f7fb;
+
+  color: #1e293b;
+}
+
+
+/* =========================
+   ACTIONS
+========================= */
+
+.financial-actions {
+  max-width: 1400px;
+
+  margin: 0 auto 25px;
+
+  display: flex;
+
+  gap: 12px;
+}
+
+.primary-button,
+.secondary-button {
+  padding: 11px 18px;
+
+  border-radius: 9px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.primary-button {
+  border: none;
+
+  background: #2563eb;
+
+  color: #ffffff;
+}
+
+.primary-button:hover {
+  background: #1d4ed8;
+
+  transform: translateY(-1px);
+}
+
+.secondary-button {
+  border: 1px solid #cbd5e1;
+
+  background: #ffffff;
+
+  color: #334155;
+}
+
+.secondary-button:hover {
+  border-color: #2563eb;
+
+  color: #2563eb;
+}
+
+
+/* =========================
+   PROJECT HEADER
+========================= */
+
+.financial-header {
+  max-width: 1400px;
+
+  margin: 0 auto 30px;
+
+  padding: 30px 35px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  background: linear-gradient(
+    135deg,
+    #0f172a 0%,
+    #1e3a8a 55%,
+    #2563eb 100%
+  );
+
+  border-radius: 18px;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 12px 30px rgba(
+      15,
+      23,
+      42,
+      0.16
+    );
+}
+
+.financial-label {
+  margin: 0 0 8px;
+
+  color: #bfdbfe;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.5px;
+}
+
+.financial-header h1 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 30px;
+}
+
+.financial-client {
+  margin: 10px 0 0;
+
+  color: #dbeafe;
+
+  font-size: 14px;
+}
+
+.financial-client strong {
+  color: #ffffff;
+}
+
+
+/* =========================
+   PROJECT STATUS
+========================= */
+
+.project-status {
+  padding: 8px 16px;
+
+  border-radius: 999px;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+.status-active {
+  background: #dbeafe;
+
+  color: #1d4ed8;
+}
+
+.status-completed {
+  background: #dcfce7;
+
+  color: #15803d;
+}
+
+
+/* =========================
+   SECTION
+========================= */
+
+.financial-section {
+  max-width: 1400px;
+
+  margin: 0 auto 30px;
+
+  padding: 28px;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 16px;
+
+  box-shadow:
+    0 4px 14px rgba(
+      15,
+      23,
+      42,
+      0.04
+    );
+}
+
+.section-title {
+  margin-bottom: 22px;
+}
+
+.section-title h2 {
+  margin: 0;
+
+  color: #0f172a;
+
+  font-size: 21px;
+}
+
+.section-title p {
+  margin: 6px 0 0;
+
+  color: #64748b;
+
+  font-size: 13px;
+}
+
+
+/* =========================
+   FINANCIAL SUMMARY
+========================= */
+
+.financial-summary-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 16px;
+}
+
+.financial-card {
+  min-height: 115px;
+
+  padding: 22px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  background: #f8fafc;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 13px;
+
+  transition: 0.2s;
+}
+
+.financial-card:hover {
+  transform: translateY(-2px);
+
+  border-color: #bfdbfe;
+
+  box-shadow:
+    0 8px 20px rgba(
+      37,
+      99,
+      235,
+      0.08
+    );
+}
+
+.card-label {
+  margin-bottom: 9px;
+
+  color: #64748b;
+
+  font-size: 13px;
+}
+
+.card-value {
+  color: #0f172a;
+
+  font-size: 23px;
+
+  font-weight: 700;
+}
+
+
+/* =========================
+   PROFIT
+========================= */
+
+.profit-card {
+  background: #f0fdf4;
+
+  border-color: #bbf7d0;
+}
+
+.profit-card .card-label {
+  color: #15803d;
+}
+
+.profit-card .card-value {
+  color: #15803d;
+}
+
+
+/* =========================
+   LOSS
+========================= */
+
+.loss-card {
+  background: #fef2f2;
+
+  border-color: #fecaca;
+}
+
+.loss-card .card-label {
+  color: #dc2626;
+}
+
+.loss-card .card-value {
+  color: #dc2626;
+}
+
+
+/* =========================
+   FINANCIAL STATUS
+========================= */
+
+.financial-status-box {
+  margin-top: 18px;
+
+  padding: 17px 20px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  background: #f8fafc;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 12px;
+
+  font-size: 14px;
+}
+
+.financial-status-box > span {
+  color: #64748b;
+}
+
+.financial-status-box strong {
+  font-size: 14px;
+}
+
+.status-profitable {
+  color: #15803d;
+}
+
+.status-loss {
+  color: #dc2626;
+}
+
+.status-break-even {
+  color: #ca8a04;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-container {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+.financial-table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  font-size: 14px;
+}
+
+.financial-table th {
+  padding: 14px 15px;
+
+  background: #f1f5f9;
+
+  color: #334155;
+
+  text-align: left;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.financial-table td {
+  padding: 14px 15px;
+
+  color: #475569;
+
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.financial-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.revenue-cell {
+  color: #15803d !important;
+
+  font-weight: 700;
+}
+
+.expense-cell {
+  color: #dc2626 !important;
+
+  font-weight: 700;
+}
+
+
+/* =========================
+   EMPTY STATE
+========================= */
+
+.empty-state {
+  padding: 30px;
+
+  text-align: center;
+
+  background: #f8fafc;
+
+  border: 1px dashed #cbd5e1;
+
+  border-radius: 12px;
+
+  color: #64748b;
+
+  font-size: 14px;
+}
+
+
+/* =========================
+   LOADING
+========================= */
+
+.financial-loading,
+.financial-not-found {
+  max-width: 1400px;
+
+  margin: 80px auto;
+
+  padding: 40px;
+
+  text-align: center;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 16px;
+}
+
+.financial-loading h2,
+.financial-not-found h2 {
+  margin-bottom: 20px;
+
+  color: #0f172a;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1000px) {
+
+  .financial-page {
+    padding: 25px;
+  }
+
+  .financial-summary-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+  .financial-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .financial-page {
+    padding: 18px;
+  }
+
+  .financial-actions {
+    flex-direction: column;
+  }
+
+  .financial-actions button {
+    width: 100%;
+  }
+
+  .financial-header {
+    padding: 25px;
+  }
+
+  .financial-header h1 {
+    font-size: 24px;
+  }
+
+  .financial-section {
+    padding: 20px;
+  }
+
+  .financial-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .financial-status-box {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 8px;
+  }
+
+}
+
+
+/* =========================
+   PRINT
+========================= */
+
+@media print {
+
+  body {
+    margin: 0;
+
+    padding: 0;
+
+    background: #ffffff;
+  }
+
+  .financial-page {
+    padding: 20px;
+
+    background: #ffffff;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .financial-header {
+    box-shadow: none;
+
+    border-radius: 0;
+  }
+
+  .financial-section {
+    box-shadow: none;
+
+    break-inside: avoid;
+  }
+
+  .financial-table {
+    border-collapse: collapse;
+  }
+
+  .financial-table th,
+  .financial-table td {
+    border: 1px solid #cbd5e1;
+  }
+}
