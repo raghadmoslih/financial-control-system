@@ -27,9 +27,12 @@ function AddTimesheet() {
   // TODAY
   // =========================
 
-  const today =
-    new Date().toISOString().split("T")[0];
-
+  const today = new Intl.DateTimeFormat(
+  "en-CA",
+  {
+    timeZone: "Asia/Riyadh",
+  }
+).format(new Date());
   // =========================
   // LOAD DATA
   // =========================
